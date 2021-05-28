@@ -16,6 +16,9 @@ namespace MemberManagementSystem.Repositories
         }
 
         public DbSet<Member> Members { get; set; }
+        public DbSet<Account> Accounts { get; set; }
+
+
 
     }
 }

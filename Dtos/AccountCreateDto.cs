@@ -6,17 +6,18 @@ using System.Threading.Tasks;
 
 namespace MemberManagementSystem.Dtos
 {
-    public class MemberCreateDto
+    public class AccountCreateDto
     {
+        public int MemberId { get; set; }
         [Required]
         [MaxLength(70)]
         public string Name { get; set; }
 
+        public int Balance { get; set; }
+
         [Required]
-        [MaxLength(50)]
-        public string Address { get; set; }
+        public string Status { get; set; }
 
-        public List<AccountCreateDto> Accounts { get; set; }
-
+        public MemberCreateDto member { get; set; }
     }
 }

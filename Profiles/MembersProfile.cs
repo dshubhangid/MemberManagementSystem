@@ -12,10 +12,14 @@ namespace MemberManagementSystem.Profiles
     {
         public MembersProfile()
         {
-            CreateMap<Member, MemberDto>();
-            CreateMap<Account, AccountDto>();
+            CreateMap<Member, MemberReadDto>();
             CreateMap<MemberCreateDto, Member>();
-            CreateMap<AccountDto, Account>();
+
+            CreateMap<Account, AccountReadDto>();
+            
+            CreateMap<AccountCreateDto, Account>();
+                //.ForMember(dest => dest.Status, opt => opt.Condition(src =>(src.Status == "Active")));
+           
             //IEnumerable<AccountDto> accountDtos = Mapper.Map<IEnumerable<Account>, IEnumerable<AccountDto>>(Account);
 
         }

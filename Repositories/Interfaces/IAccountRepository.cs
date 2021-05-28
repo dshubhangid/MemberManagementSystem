@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace MemberManagementSystem.Repositories.Interfaces
 {
-    public interface IMemberRepository
+    public interface IAccountRepository
     {
-        IEnumerable<Member> AllMembers { get; }
-        Member GetMemberById(int memberId);
-        void CreateMember(Member member);
-        bool SaveChanges(); 
+        IEnumerable<Account> AllAccounts { get; }
+        Account GetAccountById(int accountId);
+        void CreateAccount(Account account);
+        bool SaveChanges();
     }
 }

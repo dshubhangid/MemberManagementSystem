@@ -9,10 +9,10 @@ namespace MemberManagementSystem.Services.Interface
 {
     public interface IMemberService
     {
-        bool CreateMembersWithAccounts(MemberCreateDto member);
+        IEnumerable<MemberReadDto> GetAllMembers();
+        MemberReadDto GetMemberById(int id);
+        bool CreateMember(MemberCreateDto member);
 
-        void CreateMember(MemberCreateDto member);
-
-        void CreateAccountForMember(Account account, int memberId);
+        
     }
 }

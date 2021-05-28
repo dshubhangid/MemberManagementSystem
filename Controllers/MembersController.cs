@@ -21,9 +21,49 @@ namespace MemberManagementSystem.Controllers
             _memberService = memberService;
             _mapper = mapper;
         }
-         public IActionResult Index()
+
+        [HttpGet]
+        public ActionResult<IEnumerable<MemberReadDto>> GetAllMembers()
         {
-            return View();
+            var members = _memberService.GetAllMembers();
+            if (members == null || (members.Count() == 0))
+            {
+                return BadRequest();
+            }
+            return Ok(members);
+        }
+
+        [HttpGet("{id}", Name = "GetMemberById")]
+        public ActionResult<MemberReadDto> GetMemberById(int id)
+        {
+
+            MemberReadDto memberDto = _memberService.GetMemberById(id);
+            if (memberDto != null)
+            {
+                return Ok(memberDto);
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        [Route("uploadmembers")]
+        public IActionResult CreateMultipleMembers(IEnumerable<MemberCreateDto> memberCreateDtoList)
+        {
+            if (memberCreateDtoList == null)
+                return BadRequest();
+
+            foreach(MemberCreateDto memberCreateDto in memberCreateDtoList)
+            {
+                if(memberCreateDto != null)
+                {
+                    if(!_memberService.CreateMember(memberCreateDto))
+                    {
+                        return BadRequest(); 
+                    }
+                }
+            }
+            //Console.WriteLine("HEre is helloworld :" + memberCreateDtoList);
+            return Ok();
         }
 
         [HttpPost]
@@ -31,7 +71,7 @@ namespace MemberManagementSystem.Controllers
         {
             if (memberCreateDto == null)
                 return BadRequest();
-            if (_memberService.CreateMembersWithAccounts(memberCreateDto))
+            if (_memberService.CreateMember(memberCreateDto))
             {
                 return Ok();
             }

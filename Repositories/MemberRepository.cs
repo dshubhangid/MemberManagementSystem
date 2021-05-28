@@ -1,4 +1,5 @@
-﻿using MemberManagementSystem.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using MemberManagementSystem.Models;
 using MemberManagementSystem.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -9,19 +10,39 @@ namespace MemberManagementSystem.Repositories
 {
     public class MemberRepository : IMemberRepository
     {
-        public void CreateAccountForMember(Account account, int memberId)
+        private readonly MemberManagementDbContext _memberDbContext;
+
+        public MemberRepository(MemberManagementDbContext memberDbContext)
         {
-            throw new NotImplementedException();
+            _memberDbContext = memberDbContext;
+        }
+
+        public IEnumerable<Member> AllMembers
+        {
+            get
+            {
+                return _memberDbContext.Members.Include(a => a.Accounts);
+            }
+        }
+
+        public Member GetMemberById(int memberId)
+        {
+            return AllMembers.FirstOrDefault(m => m.Id == memberId);
+            //return _memberDbContext.Members.FirstOrDefault(m=> m.Id == memberId);
         }
 
         public void CreateMember(Member member)
         {
-            throw new NotImplementedException();
+            if (member == null)
+            {
+                throw new ArgumentNullException(nameof(member));
+            }
+            _memberDbContext.Members.Add(member);
         }
 
-        public void CreateMembersWithAccounts(Member member)
+        public bool SaveChanges()
         {
-            throw new NotImplementedException();
+            return (_memberDbContext.SaveChanges() >= 0);
         }
     }
 }

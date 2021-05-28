@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 
 namespace MemberManagementSystem.Dtos
 {
-    public class AccountDto
+    public class MemberReadDto
     {
-        public int Id { get; set; }
-        public int MemberId { get; set; }
         public string Name { get; set; }
-        public int Balance { get; set; }
-        public bool Status { get; set; }
+        public string Address { get; set; }
+
+        public IEnumerable<AccountReadDto> Accounts { get; set; }
     }
 }

@@ -14,9 +14,10 @@ namespace MemberManagementSystem.Models
 
         [Key]
         public int Id { get; set; }
-        public int MemberId { get; set; }
+        public int? MemberId { get; set; }
         public string Name { get; set; }
         public int Balance { get; set; }
-        public bool Status { get; set; }
+        public string Status { get; set; }
+        public Member member { get; set; }
     }
 }

@@ -13,6 +13,6 @@ namespace MemberManagementSystem.Models
         public string Name { get; set; }
         public string Address { get; set; }
 
-        public IEnumerable<Account> Accounts { get; set; }
+        public ICollection<Account> Accounts { get; set; }
     }
 }
