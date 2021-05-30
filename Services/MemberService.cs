@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using MemberManagementSystem.Dtos;
+using MemberManagementSystem.FilterResource;
 using MemberManagementSystem.Models;
 using MemberManagementSystem.Repositories.Interfaces;
 using MemberManagementSystem.Services.Interface;
@@ -42,6 +43,11 @@ namespace MemberManagementSystem.Services
             return _mapper.Map<IEnumerable<MemberReadDto>>(members);
         }
 
+        public IEnumerable<Member> GetAllFilteredMembers(MemberFilterParameter memberFilterParameter)
+        {
+            return(_memberRepository.GetAllFilteredMembers(memberFilterParameter));
+        }
+
         public bool CreateMember(MemberCreateDto memberDto)
         {
             Member member = _mapper.Map<Member>(memberDto);
@@ -51,8 +57,6 @@ namespace MemberManagementSystem.Services
             //throw new NotImplementedException();
         }
 
-
        
-
     }
 }

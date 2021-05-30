@@ -32,7 +32,7 @@ namespace MemberManagementSystem
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<MemberManagementDbContext>(options => options.UseInMemoryDatabase(databaseName: "MemberDb"));
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();  
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IMemberRepository, MemberRepository>();

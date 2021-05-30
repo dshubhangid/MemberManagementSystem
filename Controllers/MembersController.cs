@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using MemberManagementSystem.Dtos;
 using MemberManagementSystem.Services.Interface;
 using AutoMapper;
+using MemberManagementSystem.FilterResource;
 
 namespace MemberManagementSystem.Controllers
 {
@@ -77,5 +78,17 @@ namespace MemberManagementSystem.Controllers
             }
             return BadRequest();
         }
+
+        [HttpGet()]
+        [Route("exportmembers")]
+
+        public ActionResult<IEnumerable<MemberReadDto>> GetAllFilteredMembers(
+          [FromQuery] MemberFilterParameter memberFilterParameter)
+        {
+            var memberListFromRepo =_memberService.GetAllFilteredMembers(memberFilterParameter);
+            return Ok(_mapper.Map<IEnumerable<MemberReadDto>>(memberListFromRepo));
+
+        }
+
     }
 }

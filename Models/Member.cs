@@ -14,5 +14,6 @@ namespace MemberManagementSystem.Models
         public string Address { get; set; }
 
         public ICollection<Account> Accounts { get; set; }
+         = new List<Account>();
     }
 }

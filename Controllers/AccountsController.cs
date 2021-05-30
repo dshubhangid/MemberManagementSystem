@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MemberManagementSystem.Dtos;
 using MemberManagementSystem.Services.Interface;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MemberManagementSystem.Controllers
@@ -43,5 +44,58 @@ namespace MemberManagementSystem.Controllers
             }
             return NotFound();
         }
+
+        [HttpPost]
+        public IActionResult CreateAccount(AccountCreateDto accountCreateDto)
+        {
+            //Check if Member exist
+
+            if (accountCreateDto == null)
+                return BadRequest();
+
+            if (_accountService.CreateAccount(accountCreateDto))
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [HttpPatch]
+        [Route("collectpoints/{id}/{points}")]
+        public ActionResult CollectAccountPoints(int id, int points)
+        {
+            AccountReadDto accountDto = _accountService.GetAccountById(id);
+            if (accountDto == null)
+            {
+                return NotFound();
+            }
+            if (_accountService.ManageAccountPoints(true,id, points))
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [HttpPatch]
+        [Route("redeempoints/{id}/{points}")]
+        public ActionResult RedeemAccountPoints(int id, int points)
+        {
+            AccountReadDto accountDto = _accountService.GetAccountById(id);
+            if (accountDto == null)
+            {
+                return NotFound();
+            }
+            if (accountDto.Status == "INACTIVE"|| accountDto.Balance < points)
+            {
+                return BadRequest();
+            }
+
+            if (_accountService.ManageAccountPoints(false,id,points))
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
     }
 }

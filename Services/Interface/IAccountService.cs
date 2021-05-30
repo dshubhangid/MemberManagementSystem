@@ -11,6 +11,7 @@ namespace MemberManagementSystem.Services.Interface
         IEnumerable<AccountReadDto> GetAllAccounts();
         AccountReadDto GetAccountById(int id);
 
-        //bool CreateAccount(AccountCreateDto account);
+        bool CreateAccount(AccountCreateDto account);
+        bool ManageAccountPoints(bool condition,int accountId, int points);
     }
 }
