@@ -22,9 +22,13 @@ Application is using in-memory database provided by ASP.net core.
 
 ## Source Code
 
-Application is available at following GitHub repository.
+Application source code is available at following GitHub repository.
 
-[https://github.com/dshubhangid/MemberManagementSystem.git](url)
+[https://github.com/dshubhangid/MemberManagementSystem](https://github.com/dshubhangid/MemberManagementSystem)
+
+[https://github.com/dshubhangid/MemberManagementSystem.git](https://github.com/dshubhangid/MemberManagementSystem.git)
+
+GitHub other projects: [https://github.com/dshubhangid?tab=repositories](https://github.com/dshubhangid?tab=repositories)
 
 ## Swagger GUI
 

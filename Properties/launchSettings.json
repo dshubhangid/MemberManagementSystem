@@ -20,7 +20,7 @@
     "MemberManagementSystem": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/members",
+      "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
