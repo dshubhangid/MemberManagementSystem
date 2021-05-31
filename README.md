@@ -8,6 +8,12 @@ each account. Each account has a name identifying the company from which the poi
 and status telling if the account is active or inactive. Points cannot be redeemed from an inactive or empty
 account.
 
+## Prerequisites
+
+Visual Studio 2019 16.4 or later with the ASP.NET and web development workload
+
+.NET Core 3.1 SDK or later
+
 ## Source Code
 
 Application is using in-memory database provided by ASP.net core.
@@ -15,6 +21,14 @@ Application is using in-memory database provided by ASP.net core.
 Application is available at following GitHub repository.
 
 [https://github.com/dshubhangid/EmployeeDetailsWebApi.git](url)
+
+## Swagger GUI
+
+Appliation is integrated with Swagger GUI. 
+
+Swaager can be accessed with following URL.
+
+https://localhost:{port}/swagger/index.html
 
 ## Usecases
 
@@ -36,79 +50,200 @@ User can initially import existing members in a JSON format (example is attached
 
 ***Note***: System also automatically loads some initial dummy data on application startup.
 
-##### Dummy existing Member json for import
-```
-[
-	{
-		"Name": "Anakin Skywalker",
-		"Address": "Landsberger Straﬂe 110",
-		"Accounts": 
-		[
-			{
-				"Name": "Burger King",
-				"Balance": 10,
-				"Status": "ACTIVE"
-			},
-			{
-				"Balance": 150,
-				"Status": "INACTIVE",
-				"Name": "Fitness First"
-			}
-		]
-	},
-	{
-		"Name": "Darth Vader",
-		"Address": "Landsberger Straﬂe 112",
-		"Accounts": 
-		[
-			{
-				"Balance": 10,
-				"Status": "ACTIVE",
-				"Name": "Lufthansa"
-			}
-		]
-	},
-	{
-		"Name": "Obi-Wan Kenobi",
-		"Address": "Landsberger Straﬂe 114",
-		"Accounts": 
-		[
-			{
-				"Balance": 0,
-				"Status": "ACTIVE",
-				"Name": "Lufthansa"
-			},
-			{
-				"Balance": 17,
-				"Status": "ACTIVE",
-				"Name": "Fitness First"
-			},
-			{
-				"Name": "Burger King",
-				"Balance": 20,
-				"Status": "ACTIVE"
-			}
-		]
-	},
-	{
-		"Name": "Yoda",
-		"Address": "Landsberger Straﬂe 114",
-		"Accounts": 
-		[
-			{
-				"Balance": 10,
-				"Status": "ACTIVE",
-				"Name": "Lufthansa"
-			}
-		]
-	}
-]
-```
-
 ##### Endpoint
 
 ```
- URL: https://localhost:44339/api/members/uploadmembers
+ URL: /api/members/importmembers
+
  METHOD: GET
 
+ JSON Body: 
+
+[
+  {
+    "name": "string",
+    "address": "string",
+    "accounts": [
+      {
+        "name": "string",
+        "balance": 0,
+        "status": "string"
+      }
+    ]
+  }
+]
+```
+
+### 2. User creates a new member
+
+##### Endpoint
+```
+URL: /api/members
+
+METHOD: POST
+
+JSON Body: 
+
+{
+  "name": "string",
+  "address": "string",
+  "accounts": [
+    {
+      "name": "string",
+      "balance": 0,
+      "status": "string"
+    }
+  ]
+}
+```
+
+### 3. User creates a new account for a defined member
+
+##### Endpoint
+```
+URL: /api/members/{memberId}/accounts
+
+METHOD: POST
+
+JSON Body: 
+
+{
+  "name": "string",
+  "balance": 0,
+  "status": "string"
+}
+```
+
+### 4. Member collects points to an existing account
+
+##### Endpoint
+```
+URL: /api/members/{memberId}/accounts/collectpoints/{accountId}/{points}
+
+METHOD: PATCH
+
+Route Paramerters:
+
+1. memberId - Int (existing memberID)
+2. accountId - Int (existing accountID)
+3. points - Int
+```
+
+### 5. Member redeems points from an existing account
+
+##### Endpoint
+```
+URL: /api/members/{memberId}/accounts/redeempoints/{accountId}/{points}
+
+METHOD: PATCH
+
+Route Paramerters:
+
+1. memberId - Int (existing memberID)
+2. accountId - Int (existing accountID)
+3. points - Int
+```
+
+### 6. User can export all members based on filter criteria 
+
+(e.g.: export all members that have at least 20
+points on an inactive account)
+
+User can filter the memebers by "points" and "status" fielda.
+
+A) Status can be "ACTIVE" OR "INACTIVE".
+
+B) Points needs additional parameter "condition" which can be "GreaterThan" or "LessThan" or "EqualTo".
+Default Value for "condiion" is "EqualTo"
+
+##### Endpoint
+```
+URL: /api/members/exportMembersByFilter?Points=100&Condition=GreaterThan&Status=ACTIVE
+
+METHOD: GET
+
+Query Strings: 
+
+Points: 100
+condition=GreaterThan  (Available values : EqualTo, GreaterThan, LessThan) Default: "EqualTo"
+Status=ACTIVE (Available values : ACTIVE, INACTIVE)
+
+```
+
+## Additional Helper Endpoints
+
+### Get all accounts for defined member
+
+##### Endpoint
+```
+URL: /api/members/{memberId}/accounts
+
+METHOD: GET
+
+Response: 
+
+[
+  {
+    "id": 0,
+    "memberId": 0,
+    "name": "string",
+    "balance": 0,
+    "status": "string"
+  }
+]
+```
+
+### Get specific account for defined member
+
+##### Endpoint
+```
+URL: /api/members/{memberId}/accounts/{accountId}
+
+METHOD: GET
+
+Response: 
+
+{
+  "id": 0,
+  "memberId": 0,
+  "name": "string",
+  "balance": 0,
+  "status": "string"
+}
+```
+
+### Get all members
+
+##### Endpoint
+```
+URL: /api/members
+
+METHOD: GET
+
+Response: 
+
+[
+  {
+    "id": 0,
+    "name": "string",
+    "address": "string"
+  }
+]
+```
+
+### Get all members
+
+##### Endpoint
+```
+URL: /api/members/{id}
+
+METHOD: GET
+
+Response: 
+
+{
+  "id": 0,
+  "name": "string",
+  "address": "string"
+}
 ```
