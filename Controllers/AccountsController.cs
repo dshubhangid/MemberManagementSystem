@@ -12,6 +12,8 @@ namespace MemberManagementSystem.Controllers
 {
     [Route("api/members/{memberId}/accounts")]
     [ApiController]
+    [Produces("application/json")]
+    [Consumes("application/json")]
     public class AccountsController : Controller
     {
         private readonly IAccountService _accountService;

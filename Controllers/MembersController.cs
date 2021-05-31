@@ -13,6 +13,8 @@ namespace MemberManagementSystem.Controllers
     //[Route("api/[controller]")]
     [Route("api/members")]
     [ApiController]
+    [Produces("application/json")]
+    [Consumes("application/json")]
     public class MembersController : Controller
     {
         private readonly IMemberService _memberService;
@@ -37,29 +39,14 @@ namespace MemberManagementSystem.Controllers
         }
 
         [HttpGet()]
-        [Route("exportmembers")]
-        public ActionResult<IEnumerable<MemberReadDto>> GetAllFilteredMembers(
+        [Route("exportMembersByFilter")]
+        public ActionResult<IEnumerable<MemberReadDto>> GetAllFilteredMembersByStatusAndPointsCondition(
          [FromQuery] MemberFilterParameter memberFilterParameter)
         {
             if (memberFilterParameter == null)
             {
                 return BadRequest();
             }
-            var memberListFromRepo = _memberService.GetAllFilteredMembers(memberFilterParameter);
-            return Ok(_mapper.Map<IEnumerable<MemberReadDto>>(memberListFromRepo));
-
-        }
-
-        [HttpGet()]
-        [Route("exportMembersByFilter")]
-        public ActionResult<IEnumerable<MemberReadDto>> GetAllFilteredMembersByStatusAndPointsCondition(
-         [FromBody] MemberFilterParameter memberFilterParameter)
-        {
-            if (memberFilterParameter == null)
-            {
-                return BadRequest();
-            }
-
             var memberListFromRepo = _memberService.GetAllFilteredMembers(memberFilterParameter);
             return Ok(_mapper.Map<IEnumerable<MemberReadDto>>(memberListFromRepo));
 
@@ -78,7 +65,7 @@ namespace MemberManagementSystem.Controllers
         }
 
         [HttpPost]
-        [Route("uploadmembers")]
+        [Route("importmembers")]
         public IActionResult CreateMultipleMembers(IEnumerable<MemberCreateDto> memberCreateDtoList)
         {
             if (memberCreateDtoList == null)
