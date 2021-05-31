@@ -33,7 +33,7 @@ namespace MemberManagementSystem.Repositories
             query =
                 from member in query
                 from account in member.Accounts
-                where account.Balance > memberFilterParameter.Points && account.Status == memberFilterParameter.Status 
+                where account.Balance > memberFilterParameter.Points && account.Status == memberFilterParameter.Status
                 select member;
 
             return query.ToList()

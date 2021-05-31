@@ -18,9 +18,9 @@ namespace MemberManagementSystem.Controllers
         private readonly IMapper _mapper;
         public AccountsController(IAccountService accountService, IMapper mapper)
         {
-            _accountService = accountService??
+            _accountService = accountService ??
                 throw new ArgumentNullException(nameof(accountService));
-            _mapper = mapper??
+            _mapper = mapper ??
                 throw new ArgumentNullException(nameof(mapper));
 
         }
@@ -54,12 +54,12 @@ namespace MemberManagementSystem.Controllers
         [HttpPost]
         public IActionResult CreateAccountForMember(int memberId, AccountCreateDto accountCreateDto)
         {
-           
+
             if (accountCreateDto == null)
                 return BadRequest();
 
             //Check if Member exist
-            if(!_accountService.GetMemberById(memberId))
+            if (!_accountService.GetMemberById(memberId))
             {
                 return NotFound();
             }
@@ -69,7 +69,7 @@ namespace MemberManagementSystem.Controllers
                 return BadRequest();
             }
             return CreatedAtRoute("GetAccountForMember",
-              new {memberId = memberId, accountId = accountReadDto.Id },
+              new { memberId = memberId, accountId = accountReadDto.Id },
               accountReadDto);
         }
 
@@ -77,7 +77,7 @@ namespace MemberManagementSystem.Controllers
         [Route("collectpoints/{accountId}/{points}")]
         public ActionResult CollectAccountPoints(int memberId, int accountId, int points)
         {
-            if(!_accountService.GetMemberById(memberId))
+            if (!_accountService.GetMemberById(memberId))
             {
                 return NotFound();
             }
@@ -96,6 +96,24 @@ namespace MemberManagementSystem.Controllers
               accountReadDto);
         }
 
+        private string GetErrorMessage(AccountReadDto accountDto, int points)
+        {
+            
+            if(accountDto.Status == "INACTIVE")
+            {
+                return "Account status is INACTIVE";
+            }
+            else if (accountDto.Balance <= 0 )
+            {
+                return "Points cannot be redeemed for empty account";
+            }
+            else if (accountDto.Balance <= points)
+            {
+                return ($"Points cannot be redeemed because of insufficient balance {accountDto.Balance}");
+            }
+            return null;
+        }
+
         [HttpPatch]
         [Route("redeempoints/{accountId}/{points}")]
         public ActionResult RedeemAccountPoints(int memberId, int accountId, int points)
@@ -105,9 +123,10 @@ namespace MemberManagementSystem.Controllers
             {
                 return NotFound();
             }
-            if (accountDto.Status == "INACTIVE"|| accountDto.Balance < points)
+            string errorMsg = GetErrorMessage(accountDto, points);
+            if (errorMsg != null)
             {
-                return BadRequest();
+                return BadRequest(errorMsg);
             }
 
             var accountReadDto = _accountService.ManageAccountPoints(false, memberId, accountId, points);
