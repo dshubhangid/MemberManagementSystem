@@ -107,7 +107,7 @@ namespace MemberManagementSystem.Controllers
             {
                 return "Points cannot be redeemed for empty account";
             }
-            else if (accountDto.Balance <= points)
+            else if (accountDto.Balance < points)
             {
                 return ($"Points cannot be redeemed because of insufficient balance {accountDto.Balance}");
             }

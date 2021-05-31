@@ -20,7 +20,7 @@
     "MemberManagementSystem": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "api/members",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
