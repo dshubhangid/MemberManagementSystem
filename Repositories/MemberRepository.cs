@@ -26,14 +26,29 @@ namespace MemberManagementSystem.Repositories
             }
         }
 
+      
         public IEnumerable<Member> GetAllFilteredMembers(MemberFilterParameter memberFilterParameter)
         {
             var query = _memberDbContext.Members as IQueryable<Member>;
 
+            //query =
+            //    from member in query
+            //    from account in member.Accounts
+            //    where (BalanceConditionEnum.GreaterThan == memberFilterParameter.condition) ? (account.Balance > memberFilterParameter.Points) : 
+            //        ((BalanceConditionEnum.LessThan == memberFilterParameter.condition) ? (account.Balance > memberFilterParameter.Points) : 
+            //        ((account.Balance == memberFilterParameter.Points)))
+            //            && account.Status == memberFilterParameter.Status
+            //    //where account.Balance > memberFilterParameter.Points && account.Status == memberFilterParameter.Status
+            //    select member;
+
             query =
                 from member in query
                 from account in member.Accounts
-                where account.Balance > memberFilterParameter.Points && account.Status == memberFilterParameter.Status
+                where ((BalanceConditionEnum.GreaterThan == memberFilterParameter.condition) ? (account.Balance > memberFilterParameter.Points) :
+                    (BalanceConditionEnum.LessThan == memberFilterParameter.condition) ? (account.Balance < memberFilterParameter.Points) :
+                    (account.Balance == memberFilterParameter.Points))
+                        && (account.Status == memberFilterParameter.Status)
+                //where account.Balance > memberFilterParameter.Points && account.Status == memberFilterParameter.Status
                 select member;
 
             return query.ToList()

@@ -38,7 +38,6 @@ namespace MemberManagementSystem.Controllers
 
         [HttpGet()]
         [Route("exportmembers")]
-
         public ActionResult<IEnumerable<MemberReadDto>> GetAllFilteredMembers(
          [FromQuery] MemberFilterParameter memberFilterParameter)
         {
@@ -46,6 +45,21 @@ namespace MemberManagementSystem.Controllers
             {
                 return BadRequest();
             }
+            var memberListFromRepo = _memberService.GetAllFilteredMembers(memberFilterParameter);
+            return Ok(_mapper.Map<IEnumerable<MemberReadDto>>(memberListFromRepo));
+
+        }
+
+        [HttpGet()]
+        [Route("exportMembersByFilter")]
+        public ActionResult<IEnumerable<MemberReadDto>> GetAllFilteredMembersByStatusAndPointsCondition(
+         [FromBody] MemberFilterParameter memberFilterParameter)
+        {
+            if (memberFilterParameter == null)
+            {
+                return BadRequest();
+            }
+
             var memberListFromRepo = _memberService.GetAllFilteredMembers(memberFilterParameter);
             return Ok(_mapper.Map<IEnumerable<MemberReadDto>>(memberListFromRepo));
 
