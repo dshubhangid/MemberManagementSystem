@@ -8,10 +8,10 @@ namespace MemberManagementSystem.Services.Interface
 {
     public interface IAccountService
     {
-        IEnumerable<AccountReadDto> GetAllAccounts();
-        AccountReadDto GetAccountById(int id);
-
-        bool CreateAccount(AccountCreateDto account);
-        bool ManageAccountPoints(bool condition,int accountId, int points);
+        IEnumerable<AccountReadDto> GetAllAccountsForMember(int memberId);
+        AccountReadDto GetAccountForMember(int memberId, int id);
+        bool GetMemberById(int id);
+        AccountReadDto CreateAccount(int memberId, AccountCreateDto accountDto);
+        AccountReadDto ManageAccountPoints(bool condition, int memberId ,int accountId, int points);
     }
 }

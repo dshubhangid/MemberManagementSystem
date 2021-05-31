@@ -14,30 +14,18 @@ namespace MemberManagementSystem.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly IAccountRepository _accountRepository;
         private readonly IMemberRepository _memberRepository;
         private readonly IMapper _mapper;
 
-        public AccountService(IAccountRepository accountRepository, IMemberRepository memberRepository, IMapper mapper)
+        public AccountService(IMemberRepository memberRepository, IMapper mapper)
         {
-            _accountRepository = accountRepository;
             _memberRepository = memberRepository;
             _mapper = mapper;
         }
 
-        public AccountReadDto GetAccountById(int id)
+        public IEnumerable<AccountReadDto> GetAllAccountsForMember(int memberId)
         {
-            var accountFromRepo = _accountRepository.GetAccountById(id);
-            if (accountFromRepo != null)
-            {
-                return _mapper.Map<AccountReadDto>(accountFromRepo);
-            }
-            return null;
-        }
-
-        public IEnumerable<AccountReadDto> GetAllAccounts()
-        {
-            var accounts = _accountRepository.AllAccounts;
+            var accounts = _memberRepository.GetAccounts(memberId);
             //.GetAllMembers();
             if (accounts == null || (accounts.Count() == 0))
             {
@@ -46,32 +34,36 @@ namespace MemberManagementSystem.Services
             return _mapper.Map<IEnumerable<AccountReadDto>>(accounts);
         }
 
-        public bool GetMemberById(int memberId)
+        public AccountReadDto GetAccountForMember(int memberId, int id)
         {
-            var member = _memberRepository.GetMemberById(memberId);
-            if (member == null)
+            var accountFromRepo = _memberRepository.GetAccount(memberId, id);
+            if (accountFromRepo != null)
             {
-                return false;
+                return _mapper.Map<AccountReadDto>(accountFromRepo);
             }
-            return true;
+            return null;
         }
 
-        public bool CreateAccount(AccountCreateDto accountDto)
+        public bool GetMemberById(int id)
         {
-            //Check here first if memberid is present
-            var member = _memberRepository.GetMemberById(accountDto.MemberId);
-            if (member == null )
+            var memberFromRepo = _memberRepository.GetMemberById(id);
+            if (memberFromRepo != null)
             {
-                return false;
+                return true;
             }
+            return false;
+        }
+
+        public AccountReadDto CreateAccount(int memberId,AccountCreateDto accountDto)
+        {
             Account account = _mapper.Map<Account>(accountDto);
-            _accountRepository.CreateAccount(account);
+            _memberRepository.CreateAccount(memberId, account);
 
-            return (_accountRepository.SaveChanges());
-           
+            _memberRepository.SaveChanges();
+
+            var accountReadDto = _mapper.Map<AccountReadDto>(account);
+            return accountReadDto;
         }
-
-        
         JsonPatchDocument CreateJsonPatchDocument(string path,string pathValue)
         {
             JsonPatchDocument patchDocument = new JsonPatchDocument();
@@ -79,13 +71,13 @@ namespace MemberManagementSystem.Services
             return patchDocument;
         }
  
-        public bool ManageAccountPoints(bool condition, int accountId, int points)
+        public AccountReadDto ManageAccountPoints(bool condition, int memberId, int accountId, int points)
         {
-            var accountFromRepo = _accountRepository.GetAccountById(accountId);
+            var accountFromRepo = _memberRepository.GetAccount(memberId, accountId);
 
             if (accountFromRepo == null)
             {
-                return false;
+                return null;
             }
             string sPath = "/Balance";
             int finalPoints;
@@ -104,9 +96,10 @@ namespace MemberManagementSystem.Services
             jsonPatchDocument.ApplyTo(accountToPatch);
 
             _mapper.Map(accountToPatch, accountFromRepo);
-            _accountRepository.SaveChanges();
+            _memberRepository.SaveChanges();
 
-            return true;
+            var accountReadDto = _mapper.Map<AccountReadDto>(accountFromRepo);
+            return accountReadDto;
         }
 
     }

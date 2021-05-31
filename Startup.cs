@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 
 namespace MemberManagementSystem
 {
@@ -32,12 +33,15 @@ namespace MemberManagementSystem
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<MemberManagementDbContext>(options => options.UseInMemoryDatabase(databaseName: "MemberDb"));
-            services.AddControllers().AddNewtonsoftJson();  
+            services.AddControllers().AddNewtonsoftJson(setupAction =>
+            {
+                setupAction.SerializerSettings.ContractResolver =
+                   new CamelCasePropertyNamesContractResolver();
+            });  
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IMemberRepository, MemberRepository>();
             services.AddScoped<IMemberService, MemberService>();
-            services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IAccountService, AccountService>();
         }
 

@@ -22,16 +22,6 @@ namespace MemberManagementSystem.Services
             _mapper = mapper;
         }
 
-        public MemberReadDto GetMemberById(int id)
-        {
-            var memberFromRepo = _memberRepository.GetMemberById(id);
-            if (memberFromRepo != null)
-            {
-                return _mapper.Map<MemberReadDto>(memberFromRepo);
-            }
-            return null;
-        }
-
         public IEnumerable<MemberReadDto> GetAllMembers()
         {
             var members = _memberRepository.AllMembers;
@@ -45,16 +35,27 @@ namespace MemberManagementSystem.Services
 
         public IEnumerable<Member> GetAllFilteredMembers(MemberFilterParameter memberFilterParameter)
         {
-            return(_memberRepository.GetAllFilteredMembers(memberFilterParameter));
+            return (_memberRepository.GetAllFilteredMembers(memberFilterParameter));
         }
 
-        public bool CreateMember(MemberCreateDto memberDto)
+        public MemberReadDto GetMemberById(int id)
+        {
+            var memberFromRepo = _memberRepository.GetMemberById(id);
+            if (memberFromRepo != null)
+            {
+                return _mapper.Map<MemberReadDto>(memberFromRepo);
+            }
+            return null;
+        }
+
+        public MemberReadDto CreateMember(MemberCreateDto memberDto)
         {
             Member member = _mapper.Map<Member>(memberDto);
             _memberRepository.CreateMember(member);
-
-            return (_memberRepository.SaveChanges());
-            //throw new NotImplementedException();
+            _memberRepository.SaveChanges();
+           
+            var memberReadDto = _mapper.Map<MemberReadDto>(member);
+            return memberReadDto;
         }
 
        

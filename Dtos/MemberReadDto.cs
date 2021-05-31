@@ -7,9 +7,10 @@ namespace MemberManagementSystem.Dtos
 {
     public class MemberReadDto
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
 
-        public IEnumerable<AccountReadDto> Accounts { get; set; }
+        //public IEnumerable<AccountReadDto> Accounts { get; set; }
     }
 }

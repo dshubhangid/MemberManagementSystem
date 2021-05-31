@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MemberManagementSystem.Controllers
 {
-    [Route("api/account")]
+    [Route("api/members/{memberId}/accounts")]
     [ApiController]
     public class AccountsController : Controller
     {
@@ -18,26 +18,32 @@ namespace MemberManagementSystem.Controllers
         private readonly IMapper _mapper;
         public AccountsController(IAccountService accountService, IMapper mapper)
         {
-            _accountService = accountService;
-            _mapper = mapper;
+            _accountService = accountService??
+                throw new ArgumentNullException(nameof(accountService));
+            _mapper = mapper??
+                throw new ArgumentNullException(nameof(mapper));
+
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<AccountReadDto>> GetAllAccounts()
+        public ActionResult<IEnumerable<AccountReadDto>> GetAllAccountsForMember(int memberId)
         {
-            var members = _accountService.GetAllAccounts();
-            if (members == null || (members.Count() == 0))
+            var accounts = _accountService.GetAllAccountsForMember(memberId);
+            if (accounts == null || (accounts.Count() == 0))
             {
                 return BadRequest();
             }
-            return Ok(members);
+            return Ok(accounts);
         }
 
-        [HttpGet("{id}", Name = "GetAccountById")]
-        public ActionResult<AccountReadDto> GetAccountById(int id)
+        [HttpGet("{accountId}", Name = "GetAccountForMember")]
+        public ActionResult<AccountReadDto> GetAccountForMember(int memberId, int accountId)
         {
-
-            AccountReadDto accountDto = _accountService.GetAccountById(id);
+            if (!_accountService.GetMemberById(memberId))
+            {
+                return NotFound();
+            }
+            AccountReadDto accountDto = _accountService.GetAccountForMember(memberId, accountId);
             if (accountDto != null)
             {
                 return Ok(accountDto);
@@ -46,41 +52,55 @@ namespace MemberManagementSystem.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateAccount(AccountCreateDto accountCreateDto)
+        public IActionResult CreateAccountForMember(int memberId, AccountCreateDto accountCreateDto)
         {
-            //Check if Member exist
-
+           
             if (accountCreateDto == null)
                 return BadRequest();
 
-            if (_accountService.CreateAccount(accountCreateDto))
+            //Check if Member exist
+            if(!_accountService.GetMemberById(memberId))
             {
-                return Ok();
+                return NotFound();
             }
-            return BadRequest();
+            var accountReadDto = _accountService.CreateAccount(memberId, accountCreateDto);
+            if (accountReadDto == null)
+            {
+                return BadRequest();
+            }
+            return CreatedAtRoute("GetAccountForMember",
+              new {memberId = memberId, accountId = accountReadDto.Id },
+              accountReadDto);
         }
 
         [HttpPatch]
-        [Route("collectpoints/{id}/{points}")]
-        public ActionResult CollectAccountPoints(int id, int points)
+        [Route("collectpoints/{accountId}/{points}")]
+        public ActionResult CollectAccountPoints(int memberId, int accountId, int points)
         {
-            AccountReadDto accountDto = _accountService.GetAccountById(id);
+            if(!_accountService.GetMemberById(memberId))
+            {
+                return NotFound();
+            }
+            AccountReadDto accountDto = _accountService.GetAccountForMember(memberId, accountId);
             if (accountDto == null)
             {
                 return NotFound();
             }
-            if (_accountService.ManageAccountPoints(true,id, points))
+            var accountReadDto = _accountService.ManageAccountPoints(true, memberId, accountId, points);
+            if (accountReadDto == null)
             {
                 return Ok();
             }
-            return BadRequest();
+            return CreatedAtRoute("GetAccountForMember",
+              new { memberId = memberId, accountId = accountReadDto.Id },
+              accountReadDto);
         }
 
         [HttpPatch]
-        [Route("redeempoints/{id}/{points}")]
-        public ActionResult RedeemAccountPoints(int id, int points)
+        [Route("redeempoints/{accountId}/{points}")]
+        public ActionResult RedeemAccountPoints(int memberId, int accountId, int points)
         {
-            AccountReadDto accountDto = _accountService.GetAccountById(id);
+            AccountReadDto accountDto = _accountService.GetAccountForMember(memberId, accountId);
             if (accountDto == null)
             {
                 return NotFound();
@@ -90,11 +110,14 @@ namespace MemberManagementSystem.Controllers
                 return BadRequest();
             }
 
-            if (_accountService.ManageAccountPoints(false,id,points))
+            var accountReadDto = _accountService.ManageAccountPoints(false, memberId, accountId, points);
+            if (accountReadDto == null)
             {
                 return Ok();
             }
-            return BadRequest();
+            return CreatedAtRoute("GetAccountForMember",
+              new { memberId = memberId, accountId = accountReadDto.Id },
+              accountReadDto);
         }
 
     }

@@ -11,10 +11,9 @@ namespace MemberManagementSystem.Services.Interface
     public interface IMemberService
     {
         IEnumerable<MemberReadDto> GetAllMembers();
-
         IEnumerable<Member> GetAllFilteredMembers(MemberFilterParameter memberFilterParameter);
         MemberReadDto GetMemberById(int id);
-        bool CreateMember(MemberCreateDto member);
+        MemberReadDto CreateMember(MemberCreateDto member);
 
         
     }

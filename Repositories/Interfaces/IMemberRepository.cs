@@ -14,6 +14,10 @@ namespace MemberManagementSystem.Repositories.Interfaces
         IEnumerable<Member> GetAllFilteredMembers(MemberFilterParameter memberFilterParameter);
         Member GetMemberById(int memberId);
         void CreateMember(Member member);
+       // IEnumerable<Account> AllAccounts { get; }
+        IEnumerable<Account> GetAccounts(int memberId);
+        Account GetAccount(int memberId,  int accountId);
+        void CreateAccount(int memberId,Account account);
         bool SaveChanges(); 
 
     }

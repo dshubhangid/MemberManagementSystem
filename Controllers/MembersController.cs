@@ -11,7 +11,7 @@ using MemberManagementSystem.FilterResource;
 namespace MemberManagementSystem.Controllers
 {
     //[Route("api/[controller]")]
-    [Route("api/member")]
+    [Route("api/members")]
     [ApiController]
     public class MembersController : Controller
     {
@@ -19,8 +19,10 @@ namespace MemberManagementSystem.Controllers
         private readonly IMapper _mapper;
         public MembersController(IMemberService memberService, IMapper mapper)
         {
-            _memberService = memberService;
-            _mapper = mapper;
+            _memberService = memberService ??
+                throw new ArgumentNullException(nameof(memberService));
+            _mapper = mapper ??
+                throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet]
@@ -32,6 +34,21 @@ namespace MemberManagementSystem.Controllers
                 return BadRequest();
             }
             return Ok(members);
+        }
+
+        [HttpGet()]
+        [Route("exportmembers")]
+
+        public ActionResult<IEnumerable<MemberReadDto>> GetAllFilteredMembers(
+         [FromQuery] MemberFilterParameter memberFilterParameter)
+        {
+            if (memberFilterParameter == null)
+            {
+                return BadRequest();
+            }
+            var memberListFromRepo = _memberService.GetAllFilteredMembers(memberFilterParameter);
+            return Ok(_mapper.Map<IEnumerable<MemberReadDto>>(memberListFromRepo));
+
         }
 
         [HttpGet("{id}", Name = "GetMemberById")]
@@ -57,38 +74,31 @@ namespace MemberManagementSystem.Controllers
             {
                 if(memberCreateDto != null)
                 {
-                    if(!_memberService.CreateMember(memberCreateDto))
+                    if(_memberService.CreateMember(memberCreateDto) == null)
                     {
                         return BadRequest(); 
                     }
                 }
             }
-            //Console.WriteLine("HEre is helloworld :" + memberCreateDtoList);
             return Ok();
         }
 
         [HttpPost]
-        public IActionResult CreateMember(MemberCreateDto memberCreateDto)
+        public ActionResult<MemberReadDto> CreateMember(MemberCreateDto memberCreateDto)
         {
             if (memberCreateDto == null)
                 return BadRequest();
-            if (_memberService.CreateMember(memberCreateDto))
+            var memberReadDto = _memberService.CreateMember(memberCreateDto);
+            if (memberReadDto == null)
             {
-                return Ok();
+                return BadRequest();
             }
-            return BadRequest();
+            return CreatedAtRoute("GetMemberById",
+               new { id = memberReadDto.Id},
+               memberReadDto);
         }
 
-        [HttpGet()]
-        [Route("exportmembers")]
-
-        public ActionResult<IEnumerable<MemberReadDto>> GetAllFilteredMembers(
-          [FromQuery] MemberFilterParameter memberFilterParameter)
-        {
-            var memberListFromRepo =_memberService.GetAllFilteredMembers(memberFilterParameter);
-            return Ok(_mapper.Map<IEnumerable<MemberReadDto>>(memberListFromRepo));
-
-        }
+       
 
     }
 }

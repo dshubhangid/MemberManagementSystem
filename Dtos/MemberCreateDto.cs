@@ -13,10 +13,11 @@ namespace MemberManagementSystem.Dtos
         public string Name { get; set; }
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(100)]
         public string Address { get; set; }
 
         public List<AccountCreateDto> Accounts { get; set; }
+         = new List<AccountCreateDto>();
 
     }
 }
