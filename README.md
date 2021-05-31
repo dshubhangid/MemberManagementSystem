@@ -1,4 +1,4 @@
-# MemberManagementSystem 
+# MemberManagementSystem
 
 We need to save and manage information about our
 members (name and address). Each member can have one or more accounts where he or she can collect
@@ -14,17 +14,21 @@ Visual Studio 2019 16.4 or later with the ASP.NET and web development workload
 
 .NET Core 3.1 SDK or later
 
-## Source Code
+## Database
 
 Application is using in-memory database provided by ASP.net core.
 
+**_Note:_** System automatically loads some initial dummy data on application startup.
+
+## Source Code
+
 Application is available at following GitHub repository.
 
-[https://github.com/dshubhangid/EmployeeDetailsWebApi.git](url)
+[https://github.com/dshubhangid/MemberManagementSystem.git](url)
 
 ## Swagger GUI
 
-Appliation is integrated with Swagger GUI. 
+Application is integrated with Swagger GUI.
 
 Swaager can be accessed with following URL.
 
@@ -40,7 +44,7 @@ Following usecases are covered by the system.
 4. Member collects points to an existing account
 5. Member redeems points from an existing account
 6. User can export all members based on filter criteria (e.g.: export all members that have at least 20
-points on an inactive account)
+   points on an inactive account)
 
 ## WebApi Details
 
@@ -48,16 +52,16 @@ points on an inactive account)
 
 User can initially import existing members in a JSON format (example is attached)
 
-***Note***: System also automatically loads some initial dummy data on application startup.
+**_Note_**: System also automatically loads some initial dummy data on application startup.
 
 ##### Endpoint
 
 ```
  URL: /api/members/importmembers
 
- METHOD: GET
+ METHOD: POST
 
- JSON Body: 
+ JSON Body:
 
 [
   {
@@ -77,12 +81,13 @@ User can initially import existing members in a JSON format (example is attached
 ### 2. User creates a new member
 
 ##### Endpoint
+
 ```
 URL: /api/members
 
 METHOD: POST
 
-JSON Body: 
+JSON Body:
 
 {
   "name": "string",
@@ -100,12 +105,13 @@ JSON Body:
 ### 3. User creates a new account for a defined member
 
 ##### Endpoint
+
 ```
 URL: /api/members/{memberId}/accounts
 
 METHOD: POST
 
-JSON Body: 
+JSON Body:
 
 {
   "name": "string",
@@ -117,6 +123,7 @@ JSON Body:
 ### 4. Member collects points to an existing account
 
 ##### Endpoint
+
 ```
 URL: /api/members/{memberId}/accounts/collectpoints/{accountId}/{points}
 
@@ -132,6 +139,7 @@ Route Paramerters:
 ### 5. Member redeems points from an existing account
 
 ##### Endpoint
+
 ```
 URL: /api/members/{memberId}/accounts/redeempoints/{accountId}/{points}
 
@@ -144,12 +152,12 @@ Route Paramerters:
 3. points - Int
 ```
 
-### 6. User can export all members based on filter criteria 
+### 6. User can export all members based on filter criteria
 
 (e.g.: export all members that have at least 20
 points on an inactive account)
 
-User can filter the memebers by "points" and "status" fielda.
+User can filter the memebers by "points" and "status" fields.
 
 A) Status can be "ACTIVE" OR "INACTIVE".
 
@@ -157,12 +165,13 @@ B) Points needs additional parameter "condition" which can be "GreaterThan" or "
 Default Value for "condiion" is "EqualTo"
 
 ##### Endpoint
+
 ```
 URL: /api/members/exportMembersByFilter?Points=100&Condition=GreaterThan&Status=ACTIVE
 
 METHOD: GET
 
-Query Strings: 
+Query Strings:
 
 Points: 100
 condition=GreaterThan  (Available values : EqualTo, GreaterThan, LessThan) Default: "EqualTo"
@@ -172,15 +181,16 @@ Status=ACTIVE (Available values : ACTIVE, INACTIVE)
 
 ## Additional Helper Endpoints
 
-### Get all accounts for defined member
+### 1. Get all accounts for defined member
 
 ##### Endpoint
+
 ```
 URL: /api/members/{memberId}/accounts
 
 METHOD: GET
 
-Response: 
+Response:
 
 [
   {
@@ -193,15 +203,16 @@ Response:
 ]
 ```
 
-### Get specific account for defined member
+### 2. Get specific account for defined member
 
 ##### Endpoint
+
 ```
 URL: /api/members/{memberId}/accounts/{accountId}
 
 METHOD: GET
 
-Response: 
+Response:
 
 {
   "id": 0,
@@ -212,15 +223,16 @@ Response:
 }
 ```
 
-### Get all members
+### 3. Get all members
 
 ##### Endpoint
+
 ```
 URL: /api/members
 
 METHOD: GET
 
-Response: 
+Response:
 
 [
   {
@@ -231,15 +243,16 @@ Response:
 ]
 ```
 
-### Get all members
+### 4. Get all members
 
 ##### Endpoint
+
 ```
 URL: /api/members/{id}
 
 METHOD: GET
 
-Response: 
+Response:
 
 {
   "id": 0,
