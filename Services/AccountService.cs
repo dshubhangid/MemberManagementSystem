@@ -26,7 +26,6 @@ namespace MemberManagementSystem.Services
         public IEnumerable<AccountReadDto> GetAllAccountsForMember(int memberId)
         {
             var accounts = _memberRepository.GetAccounts(memberId);
-            //.GetAllMembers();
             if (accounts == null || (accounts.Count() == 0))
             {
                 return null;

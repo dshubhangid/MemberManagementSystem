@@ -9,16 +9,11 @@ namespace MemberManagementSystem.Repositories
 {
     public class MemberManagementDbContext : DbContext 
     {
-
         public MemberManagementDbContext(DbContextOptions<MemberManagementDbContext> opt) : base(opt)
         {
 
         }
-
         public DbSet<Member> Members { get; set; }
         public DbSet<Account> Accounts { get; set; }
-
-
-
     }
 }

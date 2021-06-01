@@ -16,7 +16,6 @@ namespace MemberManagementSystem
     {
         public static void Main(string[] args)
         {
-            //CreateHostBuilder(args).Build().Run();
             //1. Get the IWebHost which will host this application.
             var host = CreateHostBuilder(args).Build();
 
@@ -30,7 +29,6 @@ namespace MemberManagementSystem
                 //4. Call the DataGenerator to create sample data
                 GenerateDefaultData.Initialize(services);
             }
-
             //Continue to run the application
             host.Run();
         }

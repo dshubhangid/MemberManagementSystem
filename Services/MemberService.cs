@@ -25,7 +25,6 @@ namespace MemberManagementSystem.Services
         public IEnumerable<MemberReadDto> GetAllMembers()
         {
             var members = _memberRepository.AllMembers;
-            //.GetAllMembers();
             if (members == null || (members.Count() == 0))
             {
                 return null;
@@ -57,7 +56,5 @@ namespace MemberManagementSystem.Services
             var memberReadDto = _mapper.Map<MemberReadDto>(member);
             return memberReadDto;
         }
-
-       
     }
 }

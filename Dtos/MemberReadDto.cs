@@ -11,6 +11,5 @@ namespace MemberManagementSystem.Dtos
         public string Name { get; set; }
         public string Address { get; set; }
 
-        //public IEnumerable<AccountReadDto> Accounts { get; set; }
     }
 }

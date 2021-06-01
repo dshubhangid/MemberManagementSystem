@@ -18,6 +18,5 @@ namespace MemberManagementSystem.Dtos
         [Required]
         public string Status { get; set; }
 
-        //public MemberCreateDto member { get; set; }
     }
 }

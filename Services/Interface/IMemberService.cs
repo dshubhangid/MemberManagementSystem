@@ -14,7 +14,5 @@ namespace MemberManagementSystem.Services.Interface
         IEnumerable<Member> GetAllFilteredMembers(MemberFilterParameter memberFilterParameter);
         MemberReadDto GetMemberById(int id);
         MemberReadDto CreateMember(MemberCreateDto member);
-
-        
     }
 }

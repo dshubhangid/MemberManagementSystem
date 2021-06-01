@@ -13,12 +13,7 @@ namespace MemberManagementSystem.Profiles
         public MembersProfile()
         {
             CreateMap<Member, MemberReadDto>();
-
             CreateMap<MemberCreateDto, Member>();
-
-           
-
         }
-
     }
 }

@@ -31,18 +31,6 @@ namespace MemberManagementSystem.Repositories
         {
             var query = _memberDbContext.Members as IQueryable<Member>;
 
-
-
-            //query =
-            //    from member in query
-            //    from account in member.Accounts
-            //    where ((BalanceConditionEnum.GreaterThan == memberFilterParameter.condition) ? (account.Balance > memberFilterParameter.Points) :
-            //        (BalanceConditionEnum.LessThan == memberFilterParameter.condition) ? (account.Balance < memberFilterParameter.Points) :
-            //        (account.Balance == memberFilterParameter.Points))
-            //            && (account.Status == memberFilterParameter.Status)
-            //    //where account.Balance > memberFilterParameter.Points && account.Status == memberFilterParameter.Status
-            //    select member;
-
             query =
                from member in query
                from account in member.Accounts
@@ -56,7 +44,6 @@ namespace MemberManagementSystem.Repositories
             return query.ToList()
                 .GroupBy(m => new { m.Name, m.Address })
                               .Select(m => m.FirstOrDefault()); ;
-
         }
 
         public Member GetMemberById(int memberId)
@@ -72,14 +59,6 @@ namespace MemberManagementSystem.Repositories
             }
             _memberDbContext.Members.Add(member);
         }
-
-        //public IEnumerable<Account> AllAccounts
-        //{
-        //    get
-        //    {
-        //        return _memberDbContext.Accounts.Include(m => m.member);
-        //    }
-        //}
 
         public void CreateAccount(int memberId, Account account)
         {
@@ -105,7 +84,5 @@ namespace MemberManagementSystem.Repositories
         {
             return (_memberDbContext.SaveChanges() >= 0);
         }
-
-
     }
 }

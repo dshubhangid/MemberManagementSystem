@@ -8,7 +8,6 @@ namespace MemberManagementSystem.Dtos
 {
     public class AccountCreateDto
     {
-        //public int MemberId { get; set; }
         [Required]
         [MaxLength(70)]
         public string Name { get; set; }
@@ -17,7 +16,5 @@ namespace MemberManagementSystem.Dtos
 
         [Required]
         public string Status { get; set; }
-
-       // public MemberCreateDto member { get; set; }
     }
 }

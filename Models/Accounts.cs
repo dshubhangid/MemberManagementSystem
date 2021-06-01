@@ -9,10 +9,6 @@ namespace MemberManagementSystem.Models
 {
     public class Account
     {
-        //    "Name": "Burger King",
-        //"Balance": 10,
-        //"Status": "ACTIVE"
-
         [Key]
         public int Id { get; set; }
         public int? MemberId { get; set; }
